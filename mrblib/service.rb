@@ -19,9 +19,6 @@ module JSON
 
         id = request.id
 
-          responses.result(value,request.id)
-        }
-
         error = lambda { |error|
           responses.error(error,request.id)
         }
