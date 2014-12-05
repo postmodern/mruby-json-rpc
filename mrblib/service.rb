@@ -19,12 +19,8 @@ module JSON
 
         id = request.id
 
-        error = lambda { |error|
-          responses.error(error,request.id)
-        }
-
         unless request.valid?
-          return error.call(Errors::InvalidRequest)
+          return responses.call(Errors::InvalidRequest,id)
         end
 
         response = begin
@@ -33,9 +29,9 @@ module JSON
                    rescue Namespace::MethodNotFoundError
                      responses.error(Errors::MethodNotFound,id)
                    rescue ArgumentError => exception
-                     responses.call(Errors::InvalidParams(exception))
+                     responses.call(Errors::InvalidParams(exception),id)
                    rescue Exception => exception
-                     error.call(Errors::InternalError(exception))
+                     responses.call(Errors::InternalError(exception),id)
                    end
 
         unless request.notification?
